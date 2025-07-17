@@ -1,0 +1,95 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="text-center mb-5">
+        <h1 class="display-4">Welcome to Finance Tracker</h1>
+        <p class="lead">Track your stock portfolio with real-time data from Polygon API</p>
+      </div>
+
+      <% if user_signed_in? %>
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">My Portfolio</h5>
+                <p class="card-text">View and manage your stock portfolio</p>
+                <%= link_to "View Portfolio", stocks_path, class: "btn btn-primary" %>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-plus-circle fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Add Stocks</h5>
+                <p class="card-text">Search and add stocks to your portfolio</p>
+                <%= link_to "Add Stock", new_stock_path, class: "btn btn-success" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <p>Welcome back, <strong><%= current_user.email %></strong>!</p>
+          <%= link_to 'Sign out', destroy_user_session_path, method: :delete, 
+              data: {turbo_method: :delete}, class: 'btn btn-outline-secondary' %>
+        </div>
+      <% else %>
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Sign Up</h5>
+                <p class="card-text">Create your account to start tracking stocks</p>
+                <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-sign-in-alt fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Sign In</h5>
+                <p class="card-text">Already have an account? Sign in here</p>
+                <%= link_to "Sign In", new_user_session_path, class: "btn btn-success" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="row mt-5">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Features</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4 text-center mb-3">
+                  <i class="fas fa-chart-bar fa-2x text-info mb-2"></i>
+                  <h6>Real-time Data</h6>
+                  <p class="small">Get live stock prices and market data</p>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                  <i class="fas fa-search fa-2x text-warning mb-2"></i>
+                  <h6>Stock Search</h6>
+                  <p class="small">Search and discover stocks by symbol or company name</p>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                  <i class="fas fa-briefcase fa-2x text-danger mb-2"></i>
+                  <h6>Portfolio Management</h6>
+                  <p class="small">Track multiple stocks in your personal portfolio</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
