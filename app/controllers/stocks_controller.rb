@@ -19,15 +19,23 @@ class StocksController < ApplicationController
   end
 
   def new
-    @stock = current_user.stocks.build
+    @stock = Stock.new
   end
 
   def create
-    symbol = stock_params[:symbol].upcase
+    # Get symbol from params more safely
+    symbol = params.dig(:stock, :symbol) || params[:symbol]
+    
+    if symbol.blank?
+      redirect_to new_stock_path, alert: "Please enter a stock symbol."
+      return
+    end
+    
+    symbol = symbol.upcase
 
     # Check if user already has this stock
-    existing_stock = current_user.stocks.find_by(symbol: symbol)
-    if existing_stock
+    existing_stock = Stock.find_by(symbol: symbol)
+    if existing_stock && current_user.stocks.include?(existing_stock)
       redirect_to stocks_path, alert: "You already have this stock in your portfolio!"
       return
     end
@@ -39,22 +47,25 @@ class StocksController < ApplicationController
     if stock_data[:error]
       redirect_to new_stock_path, alert: "Error: #{stock_data[:error]}"
     else
-      @stock = current_user.stocks.build(
-        symbol: stock_data[:symbol],
-        name: stock_data[:name],
-        price: stock_data[:price]
-      )
-
-      if @stock.save
-        redirect_to stocks_path, notice: 'Stock was successfully added to your portfolio!'
-      else
-        render :new
+      # Find or create the stock
+      @stock = Stock.find_or_create_by(symbol: stock_data[:symbol]) do |stock|
+        stock.name = stock_data[:name]
+        stock.price = stock_data[:price]
       end
+      
+      # Update price if stock already exists
+      @stock.update(price: stock_data[:price]) if @stock.persisted?
+
+      # Add stock to user's portfolio
+      current_user.stocks << @stock unless current_user.stocks.include?(@stock)
+      
+      redirect_to stocks_path, notice: 'Stock was successfully added to your portfolio!'
     end
   end
 
   def destroy
-    @stock.destroy
+    # Remove the stock from user's portfolio (removes the association)
+    current_user.stocks.delete(@stock)
     redirect_to stocks_path, notice: "Stock was successfully removed from your portfolio."
   end
 
@@ -83,6 +94,11 @@ class StocksController < ApplicationController
   end
 
   def stock_params
-    params.require(:stock).permit(:symbol)
+    if params[:stock].is_a?(ActionController::Parameters)
+      params.require(:stock).permit(:symbol)
+    else
+      # Handle case where params might be processed differently
+      { symbol: params.dig(:stock, :symbol) || params[:symbol] }
+    end
   end
 end

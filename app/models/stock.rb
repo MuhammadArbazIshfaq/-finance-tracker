@@ -1,3 +1,4 @@
 class Stock < ApplicationRecord
-  belongs_to :user
+  has_many :user_stocks, dependent: :destroy
+  has_many :users, through: :user_stocks
 end
