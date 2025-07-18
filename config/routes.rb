@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :user_stcoks
   devise_for :users
   
   resources :stocks do

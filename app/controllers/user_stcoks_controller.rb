@@ -1,0 +1,2 @@
+class UserStcoksController < ApplicationController
+end
