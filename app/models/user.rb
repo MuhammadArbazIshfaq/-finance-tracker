@@ -6,4 +6,15 @@ class User < ApplicationRecord
 
   has_many :user_stocks, dependent: :destroy
   has_many :stocks, through: :user_stocks
+  has_many :friendships, dependent: :destroy
+  has_many :friends, through: :friendships, source: :friend
+  
+  # Search scope for finding users
+  scope :search_by_email, ->(search_term) {
+    where("lower(email) LIKE ?", "%#{search_term.downcase}%")
+  }
+  
+  def display_name
+    email.split('@').first.titleize
+  end
 end

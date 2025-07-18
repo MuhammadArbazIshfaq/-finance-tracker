@@ -1,40 +1,44 @@
-
-  <% if params[:search].present? %>
+<% if params[:search].present? %>
   <% if @search_results.any? %>
- 
-  <h6>Search Results for "<%= params[:search] %>":</h6>
-  <div class="list-group">
-  <% @search_results.first(20).each do |result| %>
-  <div class="list-group-item d-flex justify-content-between align-items-center">
-  <div>
-  <strong><%= result[:symbol] %></strong> - <%= result[:name] %>
-  <br><small class="text-muted">
-  Market: <%= result[:market] %> | Type: <%= result[:type] %>
-  </small>
-  <%= link_to "View Details", new_stock_path(symbol: result[:symbol]),
-  class: "btn btn-sm btn-outline-info me-2" %>
-  <%= form_with url: stocks_path, method: :post, local: true, class: "d-inline" do |f| %>
-<%= hidden_field_tag "stock[symbol]", result[:symbol] %>
+    <div class="alert alert-success mb-3">
+      <h6 class="mb-0">Search Results for "<%= params[:search] %>":</h6>
+    </div>
 
-  <%= f.submit "Add to Portfolio", class: "btn btn-sm btn-success" %>
-  <% end %>
-  </div>
-  </div>
-  <% end %>
-  </div>
+    <div class="list-group">
+      <% @search_results.first(20).each do |result| %>
+        <div class="list-group-item py-3">
+          <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div class="mb-2">
+              <h6 class="mb-1">
+                <strong><%= result[:symbol] %></strong> - <%= result[:name] %>
+              </h6>
+              <small class="text-muted">
+                Market: <%= result[:market] %> | Type: <%= result[:type] %>
+              </small>
+            </div>
+            <div class="d-flex gap-2">
+              <%= form_with url: stocks_path, method: :post, local: true, class: "d-inline" do |f| %>
+                <%= hidden_field_tag "stock[symbol]", result[:symbol] %>
+                <%= f.submit "Add to Portfolio", class: "btn btn-sm btn-success" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
   <% else %>
-  <div class="alert alert-info">
-  <h6>No results found</h6>
-  <p class="mb-0">No stocks found for "<%= params[:search] %>". Try searching with a different term or stock symbol.</p>
-  </div>
+    <div class="alert alert-warning">
+      <h6 class="mb-1">No results found</h6>
+      <p class="mb-0">No stocks found for "<%= params[:search] %>". Try using a different term or stock symbol.</p>
+    </div>
   <% end %>
-  <% else %>
-  <div class="alert alert-light">
-  <h6>How to search:</h6>
-  <ul class="mb-0">
-  <li>Enter a company name (e.g., "Apple", "Microsoft")</li>
-  <li>Enter a stock symbol (e.g., "AAPL", "MSFT")</li>
-  <li>Search for partial matches</li>
-  </ul>
+<% else %>
+  <div class="alert alert-light border">
+    <h6 class="mb-2">How to search:</h6>
+    <ul class="mb-0 ps-3">
+      <li>Enter a company name (e.g., "Apple", "Microsoft")</li>
+      <li>Enter a stock symbol (e.g., "AAPL", "MSFT")</li>
+      <li>Search for partial matches</li>
+    </ul>
   </div>
-  <% end %>
+<% end %>

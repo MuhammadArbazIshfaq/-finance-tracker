@@ -1,0 +1,117 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="mb-4">My Friends</h1>
+      
+      <!-- Search Form -->
+      <div class="card mb-4 friends-search-card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fas fa-search me-2"></i>Search & Add Friends</h5>
+        </div>
+        <div class="card-body">
+          <%= render 'shared/search', url: my_friends_path, method: :get, local: true, placeholder: "Search by email (e.g., john@example.com or john)", button_text: "Search Users" %>
+
+          <!-- Search Results -->
+          <% if params[:search].present? %>
+            <div class="mt-4">
+              <h6><i class="fas fa-users me-2"></i>Search Results:</h6>
+              <% if @search_results.any? %>
+                <div class="table-responsive search-results-table">
+                  <table class="table table-sm table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th><i class="fas fa-envelope me-1"></i>Email</th>
+                        <th><i class="fas fa-cog me-1"></i>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @search_results.each do |user| %>
+                        <tr>
+                          <td><%= user.email %></td>
+                          <td>
+                            <div class="friend-action-buttons">
+                              <% if current_user.friends.include?(user) %>
+                                <span class="badge bg-success">
+                                  <i class="fas fa-check me-1"></i>Already Friend
+                                </span>
+                                <%= buttom_to friendship_path(user), 
+                                    method: :delete, 
+                                    data: { confirm: "Remove #{user.email} from friends?" }, 
+                                    class: "btn btn-danger btn-sm" do %>
+                                  <i class="fas fa-user-minus me-1"></i>Remove
+                                <% end %>
+                              <% else %>
+                               <%= button_to friendships_path, 
+                                        method: :post, 
+                                        params: { friend_id: user.id }, 
+                                        class: "btn btn-success btn-sm" do %>
+                            <i class="fas fa-user-plus me-1"></i>Add Friend
+                            <% end %>
+
+                              <% end %>
+                            </div>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              <% else %>
+                <div class="alert alert-info">
+                  <small>No users found matching "<%= params[:search] %>"</small>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Friends List -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fas fa-user-friends me-2"></i>My Friends List</h5>
+        </div>
+        <div class="card-body">
+          <% if @friends.any? %>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                  <tr>
+                    <th scope="col"><i class="fas fa-user me-1"></i>Name</th>
+                    <th scope="col"><i class="fas fa-envelope me-1"></i>Email</th>
+                    <th scope="col"><i class="fas fa-cog me-1"></i>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @friends.each do |friend| %>
+                    <tr>
+                      <td>
+                        <strong><%= friend.display_name %></strong>
+                      </td>
+                      <td><%= friend.email %></td>
+                      <td>
+                        <%= button_to friendship_path(friend), 
+                            method: :delete, 
+                            
+                            data: {turbo_method: :delete, confirm: "Are you sure you want to remove #{friend.email} from your friends?" }, 
+                            class: "btn btn-danger btn-sm" do %>
+                          <i class="fas fa-user-minus me-1"></i>Remove Friend
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i>
+              <strong>No Friends Found</strong>
+              <p class="mb-0">You have no friends added yet. Use the search form above to find and add friends!</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

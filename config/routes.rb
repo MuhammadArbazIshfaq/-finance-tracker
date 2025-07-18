@@ -20,4 +20,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   root "home#index"
+  
+  # Add custom routes for friendships
+  get "my_friends" => "friendships#index", as: :my_friends
+  post "friendships" => "friendships#create", as: :friendships
+  delete "friendships/:id" => "friendships#destroy", as: :friendship
 end

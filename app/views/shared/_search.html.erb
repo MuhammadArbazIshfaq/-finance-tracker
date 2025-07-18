@@ -1,0 +1,11 @@
+<%= form_with url: url, method: method, local: local, remote: (defined?(remote) ? remote : !local), class: (defined?(css_class) ? css_class : nil) do |form| %>
+  <div class="input-group mb-3">
+    <%= form.text_field :search,
+        placeholder: placeholder,
+        value: params[:search],
+        class: "form-control" %>
+    <button class="btn btn-primary" type="submit">
+      <i class="fas fa-search"></i> <%= button_text %>
+    </button>
+  </div>
+<% end %>

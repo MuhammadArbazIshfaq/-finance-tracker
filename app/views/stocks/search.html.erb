@@ -8,17 +8,9 @@
           <h5 class="mb-0">Find Stocks to Add to Your Portfolio</h5>
         </div>
         <div class="card-body">
-          <%= form_with url: search_stocks_path, method: :get, remote: true do |form| %>
-            <div class="input-group mb-3">
-              <%= form.text_field :search, placeholder: "Search for company name or symbol (e.g., Apple, AAPL)...", 
-                  class: "form-control", value: params[:search] %>
-              <button class="btn btn-primary" type="submit">
-                <i class="fas fa-search"></i> Search
-              </button>
-            </div>
-          <% end %>
+       <%= render 'shared/search', url: search_stocks_path, method: :get, local: true, placeholder: "Search for company name or symbol (e.g., Apple, AAPL)...", button_text: "Search" %>
 
-<%= render 'stocks/results' %>
+       <%= render 'stocks/results' %>
         </div>
       </div>
 

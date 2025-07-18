@@ -21,6 +21,9 @@
           <li class="nav-item">
             <%= link_to "Search Stocks", search_stocks_path, class: "nav-link #{'active' if current_page?(search_stocks_path)}" %>
           </li>
+          <li class="nav-item">
+            <%= link_to "My Friends", my_friends_path, class: "nav-link #{'active' if current_page?(my_friends_path)}" %>
+          </li>
         <% end %>
       </ul>
       

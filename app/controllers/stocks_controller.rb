@@ -84,7 +84,7 @@ end
       # If search_results is a hash with error, convert to empty array
       @search_results = [] if @search_results.is_a?(Hash) && @search_results[:error]
     else
-      flash[:alert] = "Please enter a search term."
+     flash[:alert] = "Please enter a search term." if params.key?(:search)
       @search_results = []
     end
 
