@@ -1,6 +1,7 @@
 
   <% if params[:search].present? %>
   <% if @search_results.any? %>
+ 
   <h6>Search Results for "<%= params[:search] %>":</h6>
   <div class="list-group">
   <% @search_results.first(20).each do |result| %>
@@ -10,12 +11,11 @@
   <br><small class="text-muted">
   Market: <%= result[:market] %> | Type: <%= result[:type] %>
   </small>
-  </div>
-  <div>
   <%= link_to "View Details", new_stock_path(symbol: result[:symbol]),
   class: "btn btn-sm btn-outline-info me-2" %>
   <%= form_with url: stocks_path, method: :post, local: true, class: "d-inline" do |f| %>
-  <%= f.hidden_field :stock, value: { symbol: result[:symbol] } %>
+<%= hidden_field_tag "stock[symbol]", result[:symbol] %>
+
   <%= f.submit "Add to Portfolio", class: "btn btn-sm btn-success" %>
   <% end %>
   </div>

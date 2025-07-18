@@ -22,46 +22,53 @@ class StocksController < ApplicationController
     @stock = Stock.new
   end
 
-  def create
-    # Get symbol from params more safely
-    symbol = params.dig(:stock, :symbol) || params[:symbol]
-    
-    if symbol.blank?
-      redirect_to new_stock_path, alert: "Please enter a stock symbol."
-      return
-    end
-    
-    symbol = symbol.upcase
-
-    # Check if user already has this stock
-    existing_stock = Stock.find_by(symbol: symbol)
-    if existing_stock && current_user.stocks.include?(existing_stock)
-      redirect_to stocks_path, alert: "You already have this stock in your portfolio!"
-      return
-    end
-
-    # Get stock data from Polygon API
-    polygon_service = PolygonService.new
-    stock_data = polygon_service.get_stock_quote(symbol)
-
-    if stock_data[:error]
-      redirect_to new_stock_path, alert: "Error: #{stock_data[:error]}"
+def create
+   raw_symbol =
+    if params[:stock].is_a?(Hash) || params[:stock].is_a?(ActionController::Parameters)
+      params[:stock][:symbol]
     else
-      # Find or create the stock
-      @stock = Stock.find_or_create_by(symbol: stock_data[:symbol]) do |stock|
-        stock.name = stock_data[:name]
-        stock.price = stock_data[:price]
-      end
-      
-      # Update price if stock already exists
-      @stock.update(price: stock_data[:price]) if @stock.persisted?
-
-      # Add stock to user's portfolio
-      current_user.stocks << @stock unless current_user.stocks.include?(@stock)
-      
-      redirect_to stocks_path, notice: 'Stock was successfully added to your portfolio!'
+      params[:symbol]
     end
+
+  symbol = raw_symbol.to_s.upcase
+
+  if symbol.blank?
+    redirect_to new_stock_path, alert: "Please enter a stock symbol."
+    return
   end
+
+  symbol = symbol.upcase
+
+  # Check if user already has this stock
+  existing_stock = Stock.find_by(symbol: symbol)
+  if existing_stock && current_user.stocks.include?(existing_stock)
+    redirect_to stocks_path, alert: "You already have this stock in your portfolio!"
+    return
+  end
+
+  # Get stock data from Polygon API
+  polygon_service = PolygonService.new
+  stock_data = polygon_service.get_stock_quote(symbol)
+
+  if stock_data[:error]
+    redirect_to new_stock_path, alert: "Error: #{stock_data[:error]}"
+  else
+    # Find or create the stock
+    @stock = Stock.find_or_create_by(symbol: stock_data[:symbol]) do |stock|
+      stock.name = stock_data[:name]
+      stock.price = stock_data[:price]
+    end
+
+    # Update price if stock already exists
+    @stock.update(price: stock_data[:price]) if @stock.persisted?
+
+    # Add stock to user's portfolio
+    current_user.stocks << @stock unless current_user.stocks.include?(@stock)
+
+    redirect_to stocks_path, notice: 'Stock was successfully added to your portfolio!'
+  end
+end
+
 
   def destroy
     # Remove the stock from user's portfolio (removes the association)
