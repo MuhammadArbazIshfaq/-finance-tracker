@@ -62,10 +62,11 @@ class StocksController < ApplicationController
     if params[:search].present?
       polygon_service = PolygonService.new
       @search_results = polygon_service.search_stocks(params[:search])
-      
+
       # If search_results is a hash with error, convert to empty array
       @search_results = [] if @search_results.is_a?(Hash) && @search_results[:error]
     else
+      flash[:alert] = "Please enter a search term."
       @search_results = []
     end
 

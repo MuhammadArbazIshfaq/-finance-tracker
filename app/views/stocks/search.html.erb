@@ -8,7 +8,7 @@
           <h5 class="mb-0">Find Stocks to Add to Your Portfolio</h5>
         </div>
         <div class="card-body">
-          <%= form_with url: search_stocks_path, method: :get, local: true do |form| %>
+          <%= form_with url: search_stocks_path, method: :get, remote: true do |form| %>
             <div class="input-group mb-3">
               <%= form.text_field :search, placeholder: "Search for company name or symbol (e.g., Apple, AAPL)...", 
                   class: "form-control", value: params[:search] %>
@@ -18,45 +18,7 @@
             </div>
           <% end %>
 
-          <% if params[:search].present? %>
-            <% if @search_results.any? %>
-              <h6>Search Results for "<%= params[:search] %>":</h6>
-              <div class="list-group">
-                <% @search_results.first(20).each do |result| %>
-                  <div class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                      <strong><%= result[:symbol] %></strong> - <%= result[:name] %>
-                      <br><small class="text-muted">
-                        Market: <%= result[:market] %> | Type: <%= result[:type] %>
-                      </small>
-                    </div>
-                    <div>
-                      <%= link_to "View Details", new_stock_path(symbol: result[:symbol]), 
-                          class: "btn btn-sm btn-outline-info me-2" %>
-                      <%= form_with url: stocks_path, method: :post, local: true, class: "d-inline" do |f| %>
-                        <%= f.hidden_field :stock, value: { symbol: result[:symbol] } %>
-                        <%= f.submit "Add to Portfolio", class: "btn btn-sm btn-success" %>
-                      <% end %>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="alert alert-info">
-                <h6>No results found</h6>
-                <p class="mb-0">No stocks found for "<%= params[:search] %>". Try searching with a different term or stock symbol.</p>
-              </div>
-            <% end %>
-          <% else %>
-            <div class="alert alert-light">
-              <h6>How to search:</h6>
-              <ul class="mb-0">
-                <li>Enter a company name (e.g., "Apple", "Microsoft")</li>
-                <li>Enter a stock symbol (e.g., "AAPL", "MSFT")</li>
-                <li>Search for partial matches</li>
-              </ul>
-            </div>
-          <% end %>
+<%= render 'stocks/results' %>
         </div>
       </div>
 
