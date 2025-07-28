@@ -43,9 +43,27 @@ class FriendshipsController < ApplicationController
     end
   end
   
+  def show_portfolio
+    @friend = User.find(params[:id])
+    
+    # Check if the current user is actually friends with this user
+    unless current_user.friends_with?(@friend)
+      redirect_to my_friends_path, alert: "You can only view portfolios of your friends!"
+      return
+    end
+    
+    @friend_stocks = @friend.stocks.includes(:user_stocks)
+    @total_value = calculate_portfolio_value(@friend_stocks)
+  end
+  
   private
   
   def friendship_params
     params.permit(:friend_id, :search)
+  end
+  
+  def calculate_portfolio_value(stocks)
+    # Simple calculation - in a real app you'd fetch current prices
+    stocks.sum { |stock| stock.price || 0 }
   end
 end

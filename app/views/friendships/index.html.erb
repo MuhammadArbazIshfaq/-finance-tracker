@@ -79,6 +79,7 @@
                   <tr>
                     <th scope="col"><i class="fas fa-user me-1"></i>Name</th>
                     <th scope="col"><i class="fas fa-envelope me-1"></i>Email</th>
+                    <th scope="col"><i class="fas fa-chart-line me-1"></i>Portfolio</th>
                     <th scope="col"><i class="fas fa-cog me-1"></i>Actions</th>
                   </tr>
                 </thead>
@@ -89,6 +90,11 @@
                         <strong><%= friend.display_name %></strong>
                       </td>
                       <td><%= friend.email %></td>
+                      <td>
+                        <%= link_to friend_portfolio_path(friend), class: "btn btn-info btn-sm" do %>
+                          <i class="fas fa-chart-line me-1"></i>View Portfolio
+                        <% end %>
+                      </td>
                       <td>
                         <%= button_to friendship_path(friend), 
                             method: :delete, 

@@ -17,4 +17,9 @@ class User < ApplicationRecord
   def display_name
     email.split('@').first.titleize
   end
+  
+  # Check if this user is friends with another user
+  def friends_with?(other_user)
+    friends.include?(other_user)
+  end
 end
