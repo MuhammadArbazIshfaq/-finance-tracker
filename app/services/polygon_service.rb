@@ -1,6 +1,6 @@
 class PolygonService
   include HTTParty
-  base_uri 'https://api.polygon.io'
+  base_uri "https://api.polygon.io"
 
   def initialize
     @api_key = Rails.application.credentials.polygon_api_key || ENV["POLYGON_API_KEY"] || "1FTcSbXUMijyEfxUdakHpX_WTCp4mv3y"

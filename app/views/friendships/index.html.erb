@@ -34,7 +34,7 @@
                                 <span class="badge bg-success">
                                   <i class="fas fa-check me-1"></i>Already Friend
                                 </span>
-                                <%= buttom_to friendship_path(user), 
+                                <%= button_to friendship_path(user), 
                                     method: :delete, 
                                     data: { confirm: "Remove #{user.email} from friends?" }, 
                                     class: "btn btn-danger btn-sm" do %>

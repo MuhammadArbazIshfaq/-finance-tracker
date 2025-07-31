@@ -5,7 +5,7 @@ class FriendshipsController < ApplicationController
     @friends = current_user.friends
     @search_results = []
     
-    # Handle search functionality
+
     if params[:search].present?
       search_term = params[:search].strip
       @search_results = User.search_by_email(search_term)
@@ -46,7 +46,6 @@ class FriendshipsController < ApplicationController
   def show_portfolio
     @friend = User.find(params[:id])
     
-    # Check if the current user is actually friends with this user
     unless current_user.friends_with?(@friend)
       redirect_to my_friends_path, alert: "You can only view portfolios of your friends!"
       return
